@@ -1,7 +1,7 @@
-package Service;
+package TempService;
 
 
-import Server.Server;
+import TempServer.Server;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,15 +13,15 @@ import javax.ws.rs.core.MediaType;
 import Sensor.Sensor;
 
 
-@Path("/GruppService")
+@Path("/TempService")
 
 
-public class Service {
+public class TempService {
     Server GS = new Server();
 
     
     @GET
-    @Path("/jordfuktighetssensor")
+    @Path("/GetTemp")
     @Produces (MediaType.APPLICATION_JSON)
     public List<Sensor> GetLuftfuktighet() throws ClassNotFoundException, IOException, FileNotFoundException, SQLException 
     {    
