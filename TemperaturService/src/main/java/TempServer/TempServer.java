@@ -1,5 +1,6 @@
 package TempServer;
 
+import AzureDeviceClient.AzureDeviceClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.FileInputStream;
@@ -17,10 +18,19 @@ import java.util.List;
 import java.util.Properties;
 import javax.json.Json;
 import Sensor.Sensor;
+import java.net.URISyntaxException;
 
 public class TempServer {
-        
-    public void Server(){}
+    AzureDeviceClient adc = new AzureDeviceClient();
+
+    public TempServer() {
+        adc.start();
+        System.out.print("start");
+
+
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+ 
     
     
     public List<Sensor> Displayluftfuktighet() throws ClassNotFoundException, FileNotFoundException, IOException{
@@ -45,10 +55,7 @@ public class TempServer {
             String sensorname = rs.getString("sensorname");
             Timestamp time = rs.getTimestamp("created");
             Date date = new Date();
-            System.out.print("id: " +id);
-            System.out.print("value: " + value);
-            System.out.print("Sensorname: " + sensorname);
-            System.out.print("tid "+ time);
+ 
             
             
             
@@ -147,5 +154,12 @@ public class TempServer {
     
          return jfsensor;
     }
+     
+     public String GetTemp() throws IOException, URISyntaxException{
+     
+       String temp = adc.gettemp();
+       System.out.print("Skickar vidare temp..");
+       return temp;
+     }
     
 }

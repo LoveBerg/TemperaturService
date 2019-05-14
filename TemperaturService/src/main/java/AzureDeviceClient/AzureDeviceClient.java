@@ -7,11 +7,10 @@ import java.io.FileInputStream;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.DriverManager;
+import static java.sql.DriverManager.getConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +48,7 @@ public class AzureDeviceClient extends Thread{
         }
     }
     public String gettemp() throws IOException, URISyntaxException{
+               System.out.print("Skickar vidare fårn azure temp.." + globalstring);
         return globalstring;
     }
 
@@ -106,6 +106,7 @@ public class AzureDeviceClient extends Thread{
     }
     public void run(){
         try {
+            System.out.print("Startar tråden");
             getmsg();
         } catch (IOException ex) {
             Logger.getLogger(AzureDeviceClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,7 +121,7 @@ public class AzureDeviceClient extends Thread{
         Properties p = new Properties();
         p.load(new FileInputStream("/Users/Joel/NetBeansProjects/TemperaturService/TemperaturService/src/main/java/TempServer/settings.properties"));
     
-        String connString = (p.getProperty("connectionString"));       
+        String connString = p.getProperty("connectionString");     
         IotHubClientProtocol protocol;
         protocol = IotHubClientProtocol.MQTT;
         
@@ -145,9 +146,9 @@ public class AzureDeviceClient extends Thread{
 
         client.open();
         while(!Thread.interrupted()){
+            System.out.println("Lyssnar");
             
         }
-
         System.out.println("Closing"); 
         client.closeNow();
     

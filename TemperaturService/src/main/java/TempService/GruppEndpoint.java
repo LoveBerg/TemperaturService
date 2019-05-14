@@ -1,6 +1,7 @@
 package TempService;
 
 
+import AzureDeviceClient.AzureDeviceClient;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
@@ -30,16 +31,18 @@ public class GruppEndpoint {
         this.session = session;
         GruppEndpoints.add(this);
         users.put(session.getId(), "Sensor");
-
         Sensor message = new Sensor();
         message.setSensorName("Connected");
+        message.setSensorName(gs.GetTemp());
+
+
 
         broadcast(message);
     }
    @OnMessage
     public void onMessage(Session session, Sensor message) throws IOException, EncodeException, URISyntaxException {
         if (GruppEndpoints.contains(this)){
-            message = gs.getvalue();
+            message.setSensorName(gs.GetTemp());
             broadcast(message);
         }
     }
