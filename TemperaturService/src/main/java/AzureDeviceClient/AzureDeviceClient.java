@@ -9,9 +9,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
-public class AzureDeviceClient {
+public class AzureDeviceClient extends Thread{
     private static String globalstring;
     
         private static final int D2C_MESSAGE_TIMEOUT = 2000; // 2 seconds
@@ -43,8 +45,7 @@ public class AzureDeviceClient {
             return Integer.toString(this.num);
         }
     }
-    public String gettemp(){
-        getmsg();
+    public String gettemp() throws IOException, URISyntaxException{
         return globalstring;
     }
 
@@ -53,7 +54,7 @@ public class AzureDeviceClient {
     {
         public IotHubMessageResult execute(Message msg, Object context)
         {
-            azuredevice.Counter counter = (azuredevice.Counter) context;
+            AzureDeviceClient.Counter counter = (AzureDeviceClient.Counter) context;
             System.out.println(
                     "Received message " + counter.toString()
                             + " with content: " + new String(msg.getBytes(), Message.DEFAULT_IOTHUB_MESSAGE_CHARSET));
@@ -100,49 +101,34 @@ public class AzureDeviceClient {
             }
         }
     }
-         
+    public void run(){
+        try {
+            getmsg();
+        } catch (IOException ex) {
+            Logger.getLogger(AzureDeviceClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(AzureDeviceClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public static void getmsg()
             throws IOException, URISyntaxException
     {
-        System.out.println("Starting...");
-        System.out.println("Beginning setup.");
-
         String pathToCertificate = null;
-        String connString = "HostName=IoTHub-Jocke.azure-devices.net;DeviceId=JavaClient;SharedAccessKey=tmiMH9LJA7AoumL6pF+0SBtOER7wlkRGeyqDG7gnMAI=";        IotHubClientProtocol protocol;
+        String connString = "insert connection string";        IotHubClientProtocol protocol;
         protocol = IotHubClientProtocol.MQTT;
         
-        {
-
-        System.out.println("Successfully read input parameters.");
-        System.out.format("Using communication protocol %s.\n", protocol.name());
-
+        
         DeviceClient client = new DeviceClient(connString, protocol);
         if (pathToCertificate != null)
         {
             client.setOption("SetCertificatePath", pathToCertificate);
         }
-
-        System.out.println("Successfully created an IoT Hub client.");
-
         if (protocol == IotHubClientProtocol.MQTT)
         {
             MessageCallbackMqtt callback = new MessageCallbackMqtt();
             Counter counter = new Counter(0);
             client.setMessageCallback(callback, counter);
         }
-        else
-        {
-            MessageCallback callback = new MessageCallback() {
-                @Override
-                public IotHubMessageResult execute(Message msg, Object o) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-            };
-            Counter counter = new Counter(0);
-            client.setMessageCallback(callback, counter);
-        }
-
-        System.out.println("Successfully set message callback.");
 
         // Set your token expiry time limit here
         long time = 2400;
@@ -151,49 +137,13 @@ public class AzureDeviceClient {
         client.registerConnectionStatusChangeCallback(new IotHubConnectionStatusChangeCallbackLogger(), new Object());
 
         client.open();
-
-        System.out.println("Opened connection to IoT Hub.");
-
-        System.out.println("Beginning to receive messages...");
-
-        System.out.println("Sending the following event messages: ");
-
-        System.out.println("Updated token expiry time to " + time);
-
-        String deviceId = "MyJavaDevice";
-        double temperature = 0.0;
-        double humidity = 0.0;
-
-
-        
-         System.out.println("Wait for " + D2C_MESSAGE_TIMEOUT / 1000 + " second(s) for response from the IoT Hub...");
-        
-        // Wait for IoT Hub to respond.
-        try
-        {
-          Thread.sleep(D2C_MESSAGE_TIMEOUT);
+        while(!Thread.interrupted()){
+            
         }
-      
-        catch (InterruptedException e)
-        {
-          e.printStackTrace();
-        }
-        
-        System.out.println("In receive mode. Waiting for receiving C2D messages. Press ENTER to close");
-    
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
 
-        // close the connection        
         System.out.println("Closing"); 
         client.closeNow();
-        
-        if (!failedMessageListOnClose.isEmpty())
-        {
-            System.out.println("List of messages that were cancelled on close:" + failedMessageListOnClose.toString()); 
+    
         }
 
-        System.out.println("Shutting down...");
-    }
-}
 }
