@@ -13,14 +13,14 @@ import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import Sensor.Sensor;
-import TempServer.Server;
+import TempServer.TempServer;
 import java.net.URISyntaxException;
 
 
-@ServerEndpoint(value="/test/", decoders = {GruppDecoder.class},encoders = {GruppEncoder.class})
+@ServerEndpoint(value="/Seensor/", decoders = {GruppDecoder.class},encoders = {GruppEncoder.class})
 
 public class GruppEndpoint {
-    Server gs = new Server();
+    TempServer gs = new TempServer();
     private Session session;
     private static final Set<GruppEndpoint> GruppEndpoints = new CopyOnWriteArraySet<>();
     private static HashMap<String, String> users = new HashMap<>();

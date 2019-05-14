@@ -1,7 +1,7 @@
 package TempService;
 
 
-import TempServer.Server;
+import TempServer.TempServer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ import Sensor.Sensor;
 
 
 public class TempService {
-    Server GS = new Server();
+    TempServer GS = new TempServer();
 
     
     @GET

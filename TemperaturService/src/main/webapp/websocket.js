@@ -2,7 +2,7 @@ var ws;
 
 
 function connect() {
-   ws = new WebSocket("ws://localhost:8080/TemperaturService/test/");
+   ws = new WebSocket("ws://localhost:8080/TemperaturService/Seensor/");
 
    var xhttp = new XMLHttpRequest();
    

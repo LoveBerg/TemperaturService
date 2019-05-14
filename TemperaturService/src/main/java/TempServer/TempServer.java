@@ -18,7 +18,7 @@ import java.util.Properties;
 import javax.json.Json;
 import Sensor.Sensor;
 
-public class Server {
+public class TempServer {
         
     public void Server(){}
     
