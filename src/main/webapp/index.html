@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+   
+    </head>
+    <body onload="connect()">
+		<table><tr><td colspan="2">
+                    <button type="button" onclick="connect();" >Connect</button>
+                    <button type="button" onclick="test()" >Test</button>
+                </td></tr>
+            <tr><td>
+                    <h1 id="temp"></h1>
+                    <textarea readonly="true" rows="10" cols="80" id="log1"></textarea>
+                </td></tr>
+            <tr><td>
+                    <input type="text" size="51" id="msg" placeholder="Message"/>
+                    <button type="button" onclick="send();" >Send</button>
+                </td></tr>
+        </table>
+         
+	</body>
+    <script src="websocket.js"></script>
+
+</html>
