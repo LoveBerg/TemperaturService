@@ -1,17 +1,51 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<script>
+<script type = "text/javascript">
+    
+    var mittData;
+    
+    function WebSocketTest() {
+            
+            if ("WebSocket" in window) {
+                alert("WebSocket is supported by your Browser!");
+               
+                var ws = new WebSocket("ws://localhost:9998/echo");
+
+                ws.onopen = function() {
+
+                   ws.send("Message to send");
+                   alert("Message is sent...");
+                };
+
+                ws.onmessage = function (evt) { 
+                   var sensor = evt.data;
+                   alert("Message is received...");
+                   //todo gör om evt till en arran mha for-loop
+                   //mittData = min nya arry
+                };
+
+                ws.onclose = function() { 
+
+                   alert("Connection is closed..."); 
+                };
+            } else {
+              
+                alert("WebSocket NOT supported by your Browser!");
+            }
+    }
+    
 var hum1 = 46;
 var hum2 = 52;
 var hum3 = 78;
+var i = 1;
 window.onload = function () {
 
 var chart = new CanvasJS.Chart("chartContainer", {
 	animationEnabled: true,
 	theme: "dark2", // "light1", "light2", "dark1", "dark2"
 	title: {
-		text: "Soil moisture"
+		text: "Air moisture"
 	},
 	axisY: {
 		title: "Humidity (in %)",
@@ -19,34 +53,38 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		includeZero: false
 	},
 	axisX: {
-		title: "Plants"
+		title: "Air space"
 	},
 	data: [{
 		type: "column",
 		yValueFormatString: "#,##0.0#\"%\"",
 		dataPoints: [
-			{ label: "Plant 1", y: hum1 },	
-			{ label: "Plant 2", y: hum2 },	
-                        { label: "Plant 3", y: hum3 }	
+			{ label: "Air 1", y: hum1 },	
+			{ label: "Air 2", y: hum2 },	
+                        { label: "Air 3", y: hum3 }	
 			
 		]
 	}]
 });
 chart.render();
+
+var dps = [];
+var dps2 = [];
 	
 var chart2 = new CanvasJS.Chart("chartContainer2", {
 	theme: "dark2", // "light1", "light2", "dark1", "dark2"
 	animationEnabled: true,
 	title:{
-		text: "Moisture over time"  
+		text: "Air moisture over time"  
 	},
 	
 	axisX: {
+            title: "Time (Hours)",
 	},
 	axisY2: {
       	gridThickness: 0,
 		title: "Humidity (int %)",
-		suffix: "%",
+		suffix: "%"
 	},
 	legend: {
 		cursor: "pointer",
@@ -73,73 +111,98 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 		shared: true
 	},
 	data: [{
+                //for (i = 0; i < sensor.length; i++){
 		type: "spline",
-		name: "Plant 1",
+		name: "Air 1",
 		markerSize: 5,
                 axisYType: "secondary",
-		xValueFormatString: "HH",
 		yValueFormatString: "#,##0.0\"%\"",
 		showInLegend: true,
-		dataPoints: [
-			{ x: new Date(2019, 00, 01, 12), y: 47.5 },
-			{ x: new Date(2019, 00, 01, 13), y: 43.8 },
-			{ x: new Date(2019, 00, 01, 14), y: 53},
-			{ x: new Date(2019, 00, 01, 15), y: 60 },
-			{ x: new Date(2019, 00, 01, 16), y: 53 },
-			{ x: new Date(2019, 00, 01, 17), y: 23 },
-			{ x: new Date(2019, 00, 01, 18), y: 43 },
-			{ x: new Date(2019, 00, 01, 19), y: hum1 }
-		]
+		dataPoints: dps
 	},
-	{
+        {
+                //for (i = 0; i < sensor.length; i++){
 		type: "spline",
-		name: "Plant 2",
+		name: "Air 2",
 		markerSize: 5,
-		axisYType: "secondary",
-		xValueFormatString: "HH",
+                axisYType: "secondary",
 		yValueFormatString: "#,##0.0\"%\"",
 		showInLegend: true,
-		dataPoints: [
-			{ x: new Date(2019, 00, 01, 12), y: 26.8 },
-			{ x: new Date(2019, 00, 01, 13), y: 43 },
-			{ x: new Date(2019, 00, 01, 14), y: 53 },
-			{ x: new Date(2019, 00, 01, 15), y: 23 },
-			{ x: new Date(2019, 00, 01, 16), y: 54 },
-			{ x: new Date(2019, 00, 01, 17), y: 51 },
-			{ x: new Date(2019, 00, 01, 18), y: 35 },
-			{ x: new Date(2019, 00, 01, 19), y: hum2 }
-		]
-	},
-	{
-		type: "spline",
-		name: "Plant 3",
-		markerSize: 5,
-		axisYType: "secondary",
-		xValueFormatString: "HH",
-		yValueFormatString: "#,##0.0\"%\"",
-		showInLegend: true,
-		dataPoints: [
-			{ x: new Date(2019, 00, 01, 12), y: 23.6 },
-			{ x: new Date(2019, 00, 01, 13), y: 40 },
-			{ x: new Date(2019, 00, 01, 14), y: 64 },
-			{ x: new Date(2019, 00, 01, 15), y: 68 },
-			{ x: new Date(2019, 00, 01, 16), y: 48 },
-			{ x: new Date(2019, 00, 01, 17), y: 65 },
-			{ x: new Date(2019, 00, 01, 18), y: 66 },
-			{ x: new Date(2019, 00, 01, 19), y: hum3 }
-		]
+		dataPoints: dps2
 	}
+    
 	]
 });
-chart2.render();
 
-}
+var xVal = 0;
+var xVal2 = 0;
+var yVal = 100; 
+var updateInterval = 1000;
+var dataLength = sensor.length;
+
+var updateChart = function (count) {
+
+	count = count || 1;
+
+	for (var i = 0; i < sensor.length; i++) {
+            if (sensor[i].sensorId == 1){
+		yVal = sensor[i].sensorValue;
+		dps.push({
+			x: xVal,
+			y: yVal
+		});
+		xVal++;
+            }
+	}
+
+	if (dps.length > dataLength) {
+            while (dps.length > dataLength){
+		dps.shift();
+            }
+	}
+
+	chart2.render();
+updateChart2(dataLength);
+};
+
+var updateChart2 = function (count) {
+
+	count = count || 1;
+
+	for (var i = 0; i < sensor.length; i++) {
+            if (sensor[i].sensorId == 2){
+		yVal = sensor[i].sensorValue;
+		dps2.push({
+			x: xVal2,
+			y: yVal
+		});
+		xVal2++;
+            }
+	}
+
+	if (dps2.length > dataLength) {
+            while (dps2.length > dataLength) {
+		dps2.shift();
+            }
+	}
+
+	chart2.render();
+};
+
+updateChart(dataLength);
+setInterval(function(){updateChart()}, updateInterval);
+
+};
 </script>
-
+<title>Moist sensors</title>
 </head>
 <body>
-<div id="chartContainer" style="height: 300px; width: 100%;"></div>
-<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+    <div id = "sse">
+         <a href = "javascript:WebSocketTest()">Run WebSocket</a>
+    </div>
+    
+    <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
