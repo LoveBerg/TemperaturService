@@ -1,6 +1,26 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bg { 
+  /* The image used */
+  background-image: url("https://i.kym-cdn.com/entries/icons/original/000/026/489/crying.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
 <script type = "text/javascript">
     
     var mittData;
@@ -13,20 +33,17 @@
                 var ws = new WebSocket("ws://localhost:9998/echo");
 
                 ws.onopen = function() {
-
-                   ws.send("Message to send");
-                   alert("Message is sent...");
+                   var sensor = evt.data;
                 };
 
                 ws.onmessage = function (evt) { 
-                   var sensor = evt.data;
-                   alert("Message is received...");
+                   var LiveData = evt.data;
+                   alert("Temperature updated...");
                    //todo gör om evt till en arran mha for-loop
                    //mittData = min nya arry
                 };
 
                 ws.onclose = function() { 
-
                    alert("Connection is closed..."); 
                 };
             } else {
@@ -45,11 +62,11 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	animationEnabled: true,
 	theme: "dark2", // "light1", "light2", "dark1", "dark2"
 	title: {
-		text: "Air moisture"
+		text: "Air Temp"
 	},
 	axisY: {
-		title: "Humidity (in %)",
-		suffix: "%",
+		title: "temp",
+		suffix: "C",
 		includeZero: false
 	},
 	axisX: {
@@ -59,7 +76,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		type: "column",
 		yValueFormatString: "#,##0.0#\"%\"",
 		dataPoints: [
-			{ label: "Air 1", y: hum1 },	
+			{ label: "Live", y: LiveData },	
 			{ label: "Air 2", y: hum2 },	
                         { label: "Air 3", y: hum3 }	
 			
@@ -83,8 +100,8 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 	},
 	axisY2: {
       	gridThickness: 0,
-		title: "Humidity (int %)",
-		suffix: "%"
+		title: "Temp (C)",
+		suffix: "C"
 	},
 	legend: {
 		cursor: "pointer",
@@ -116,7 +133,7 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 		name: "Air 1",
 		markerSize: 5,
                 axisYType: "secondary",
-		yValueFormatString: "#,##0.0\"%\"",
+		yValueFormatString: "#,##0.0\"C\"",
 		showInLegend: true,
 		dataPoints: dps
 	},
@@ -126,7 +143,7 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 		name: "Air 2",
 		markerSize: 5,
                 axisYType: "secondary",
-		yValueFormatString: "#,##0.0\"%\"",
+		yValueFormatString: "#,##0.0\"C\"",
 		showInLegend: true,
 		dataPoints: dps2
 	}
@@ -137,7 +154,6 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 var xVal = 0;
 var xVal2 = 0;
 var yVal = 100; 
-var updateInterval = 1000;
 var dataLength = sensor.length;
 
 var updateChart = function (count) {
@@ -190,13 +206,13 @@ var updateChart2 = function (count) {
 };
 
 updateChart(dataLength);
-setInterval(function(){updateChart()}, updateInterval);
 
 };
 </script>
 <title>Moist sensors</title>
 </head>
-<body>
+<body style="background-image:url(https://i.kym-cdn.com/entries/icons/original/000/026/489/crying.jpg); 
+      background-repeat: no-repeat; background-size: cover;">
     <div id = "sse">
          <a href = "javascript:WebSocketTest()">Run WebSocket</a>
     </div>
