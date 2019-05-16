@@ -1,0 +1,55 @@
+using System;
+using System.Text;
+using Microsoft.Azure.Devices;
+using System.Data.SqlClient;
+using Newtonsoft.Json;
+
+
+static ServiceClient serviceClient = ServiceClient.CreateFromConnectionString("IotHubConnectionString");
+
+
+
+public static void Run(string myIoTHubMessage, TraceWriter log)
+{
+    var ro = JsonConvert.DeserializeObject<Rootobject>(myIoTHubMessage);
+    if(ro.hourlyUpdate == false)
+    {
+    SendCloudToDeviceMessageAsync(myIoTHubMessage);
+
+    log.Info($"skickar meddelandet: {myIoTHubMessage}");
+    }
+}
+
+async static void SendCloudToDeviceMessageAsync(string message) 
+{
+    var msg = new Message(Encoding.UTF8.GetBytes(message)) 
+    {
+        ContentEncoding = "utf-8",
+        ContentType = "application/json"
+    };
+
+    await serviceClient.SendAsync("JavaClient2", msg);
+        
+
+}
+  public class Rootobject
+        {
+            public float temperature { get; set; }
+            public string deviceId { get; set; } 
+            public bool hourlyUpdate {get; set;}          
+        }
+
+
+Project.json:
+
+{
+    "frameworks": {
+        "net46": {
+            "dependencies": {
+                "Microsoft.Azure.Devices": "1.17.3",
+                "Newtonsoft.Json": "12.0.1",
+               "System.Data.SqlClient": "4.6.0" 
+            }
+        }
+    }
+}

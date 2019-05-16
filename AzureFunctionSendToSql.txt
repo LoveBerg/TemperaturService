@@ -1,0 +1,58 @@
+using System;
+using System.Data.SqlClient;
+using Newtonsoft.Json;
+
+
+public static void Run(string myEventHubMessage, TraceWriter log)
+{
+    
+
+   var connectionstring = @"SqlServerConnection";
+
+   var ro = JsonConvert.DeserializeObject<Rootobject>(myEventHubMessage);
+    if(ro.hourlyUpdate == true)
+    {
+        log.Info($"C# IoT Hub trigger function processed a message: {myEventHubMessage}");
+            using (SqlConnection conn = new SqlConnection(connectionstring))
+            {
+
+               var MessageSql = "INSERT INTO Tempsensor(value, sensorname)VALUES(@temperature, @deviceId)";
+
+               conn.Open();
+
+               using (SqlCommand cmd = new SqlCommand(MessageSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@temperature", ro.temperature);                   
+                    cmd.Parameters.AddWithValue("@deviceId", ro.deviceId);                 
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                 conn.Close();
+                
+            }
+
+            
+        }
+
+}
+        public class Rootobject
+        {
+            public float temperature { get; set; }
+            public string deviceId { get; set; } 
+            public bool hourlyUpdate {get; set;}          
+        }
+
+
+Project.json
+
+{
+    "frameworks": {
+        "net46": {
+            "dependencies": {               
+               "Newtonsoft.Json": "12.0.1",
+               "System.Data.SqlClient": "4.6.0"              
+            }
+        }
+    }
+}
