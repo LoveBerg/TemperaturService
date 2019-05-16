@@ -8,7 +8,7 @@ function connect() {
    
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("log1").innerHTML += this.responseText;
+      document.getElementById("historia").innerHTML += this.responseText;
     }
   };
   xhttp.open("GET", "http://localhost:8080/TemperaturService/rest/TempService/GetTemp", true);
@@ -16,9 +16,12 @@ function connect() {
 
     ws.onmessage = function(event) {
         var log = document.getElementById("temp");
+        var divupdate = document.getElementById("alerttemp");
         
 
-        log.innerHTML = event.data;
+        var temp = JSON.parse(event.data);
+        log.innerHTML = temp.SensorValue;
+        
     };
 }
 function send() {

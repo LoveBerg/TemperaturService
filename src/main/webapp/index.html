@@ -1,26 +1,57 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-    <head>
-        <title>Chat</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-   
-    </head>
-    <body onload="connect()">
-		<table><tr><td colspan="2">
-                    <button type="button" onclick="connect();" >Connect</button>
-                    <button type="button" onclick="test()" >Test</button>
-                </td></tr>
-            <tr><td>
-                    <h1 id="temp"></h1>
-                    <textarea readonly="true" rows="10" cols="80" id="log1"></textarea>
-                </td></tr>
-            <tr><td>
-                    <input type="text" size="51" id="msg" placeholder="Message"/>
-                    <button type="button" onclick="send();" >Send</button>
-                </td></tr>
-        </table>
-         
-	</body>
-    <script src="websocket.js"></script>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moist sensors</title>
+<style>
+body {
+  background-color: lightblue;
+  background-image: url(https://i.kym-cdn.com/entries/icons/original/000/026/489/crying.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+h1#temp {
+  color: white;
+  text-align: left;
+  font-size:80px;
+      display: inline;
 
+
+}
+h1 {
+  text-align: left;
+  font-size:80px;
+    display: inline;
+
+
+}
+textarea#historia{
+width: 250px;
+height: 400px;
+rows: 440;
+cols: 30;
+}
+div#divtemp {
+  text-align: left;
+  display: inline;
+
+}
+div#update{
+    text-align: center;
+    widht: 100px;
+    height:50px;
+    
+}
+
+</style>
+
+
+</head>
+<body onload="connect()">
+    
+    <div><textarea id="historia"></textarea></div>
+    <div id="divtemp"><h1>Temp:</h1><h1 id="temp">22</h1></div>
+    <div id="update"><h1 id = "alerttemp"></h1></div>    
+<script src="websocket.js"></script>
+</body>
 </html>

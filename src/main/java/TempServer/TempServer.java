@@ -31,7 +31,7 @@ public class TempServer {
     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");    
     
     Properties p = new Properties();
-    p.load(new FileInputStream("/Users/Joel/NetBeansProjects/TemperaturService/src/main/java/TempServer/settings.properties"));
+    p.load(new FileInputStream("/Users/Joel/webclient/TemperaturService/src/main/java/TempServer/settings.properties"));
     try(Connection con = DriverManager.getConnection(p.getProperty("connection"));)
         {
          Statement stmt = con.createStatement();

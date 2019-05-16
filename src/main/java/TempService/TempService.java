@@ -27,13 +27,6 @@ public class TempService {
     {    
     return GS.Displayluftfuktighet();
     }    
-    @GET
-    @Path("/GetLatestValue")
-    @Produces (MediaType.APPLICATION_JSON)
-    public Sensor GetLatestValue() throws ClassNotFoundException, IOException 
-    {     
-    return GS.getvalue();
-    }  
 }
 
 

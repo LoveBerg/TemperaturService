@@ -45,7 +45,7 @@ public class GruppEndpoint {
             Gson gson = new Gson();
             SensorMessage smsg = gson.fromJson(temp, SensorMessage.class);
             
-            System.out.print("SENSOR: "+smsg);
+            System.out.print("SENSOR: "+ smsg);
                     
             if(temp != null){
                 //sensor.setSensorName(temp);
@@ -63,19 +63,6 @@ public class GruppEndpoint {
             //System.out.print(gs.gettemp());
             broadcast(message);
         }
-    }
-   @OnClose
-    public void onClose(Session session) throws IOException, EncodeException {
-        GruppEndpoints.remove(this);
-        Sensor message = new Sensor();
-        message.setSensorId(users.get(session.getId()));
-        message.setSensorName("Disconnected!");
-        broadcast(message);
-    }
-
-    @OnError
-    public void onError(Session session, Throwable throwable) {
-        // Do error handling here
     }
 
     private static void broadcast(Sensor message) 
